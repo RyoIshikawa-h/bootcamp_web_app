@@ -16,6 +16,7 @@
         <a href="<%= `/users/${user.id}/likes` %>">Likes</a>
       </li>
     </ul>
-    <%- include('../posts', {posts: posts}); %>
+    <!-- <%- include('../_posts', {posts: user.posts.map(post=> post)}); %> -->
+	<%- include('../_timeline', {timeline: timeline}); %>
   </div>
 </div>

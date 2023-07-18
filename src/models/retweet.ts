@@ -1,7 +1,50 @@
 import {Retweet} from "@prisma/client";
 import {databaseManager} from "@/db/index";
+import {type UserWithoutPassword} from "@/models/user";
+import {PostWithUser} from "@/models/post";
 
 type RetweetData = Pick<Retweet, "userId" | "postId">;
+
+export const getAllRetweets = async (): Promise<
+  Array<{createdAt: Date; user: UserWithoutPassword; post: PostWithUser}>
+> => {
+  const prisma = databaseManager.getInstance();
+  const retweets = await prisma.retweet.findMany({
+    select: {
+      createdAt: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          imageName: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+      post: {
+        select: {
+          id: true,
+          content: true,
+          userId: true,
+          createdAt: true,
+          updatedAt: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              imageName: true,
+              createdAt: true,
+              updatedAt: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  return retweets;
+};
 
 export const getPostRetweetedCount = async (
   postId: number

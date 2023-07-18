@@ -2,7 +2,7 @@ import express from "express";
 import {body, validationResult} from "express-validator";
 import {formatDate} from "@/lib/convert_date";
 import {
-  getAllPosts,
+  //   getAllPosts,
   getPost,
   createPost,
   updatePost,
@@ -12,12 +12,13 @@ import {getPostLikedCount, hasUserLikedPost} from "@/models/like";
 import {getPostRetweetedCount, hasUserRetweetedPost} from "@/models/retweet";
 import {ensureAuthUser} from "@/middlewares/authentication";
 import {ensureOwnerOfPost} from "@/middlewares/current_user";
+import {getAllTimeline} from "@/models/timeline";
 export const postRouter = express.Router();
 
 postRouter.get("/", ensureAuthUser, async (req, res) => {
-  const postsWithUser = await getAllPosts();
+  const allTimeline = await getAllTimeline();
   res.render("posts/index", {
-    posts: postsWithUser,
+    timeline: allTimeline,
   });
 });
 

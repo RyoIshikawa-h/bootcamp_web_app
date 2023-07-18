@@ -38,11 +38,16 @@ export const updateUserProfile = async (
   return user;
 };
 
-export const getUserWithPosts = async (
+export const getUserWithPostsIncludeRetweet = async (
   userId: number
 ): Promise<
   | (UserWithoutPassword & {
       posts: PostWithUser[];
+      retweets: Array<{
+        post: PostWithUser;
+        user: UserWithoutPassword;
+        createdAt: Date;
+      }>;
     })
   | null
 > => {
@@ -70,6 +75,30 @@ export const getUserWithPosts = async (
           },
         },
       },
+      retweets: {
+        select: {
+          post: {
+            select: {
+              id: true,
+              content: true,
+              userId: true,
+              createdAt: true,
+              updatedAt: true,
+              user: {
+                select: {
+                  ...selectUserColumnsWithoutPassword,
+                },
+              },
+            },
+          },
+          user: {
+            select: {
+              ...selectUserColumnsWithoutPassword,
+            },
+          },
+          createdAt: true,
+        },
+      },
     },
   });
   if (user === null) return null;
@@ -94,6 +123,51 @@ export const getUserLikedPosts = async (
     select: {
       ...selectUserColumnsWithoutPassword,
       likes: {
+        orderBy: {
+          post: {
+            createdAt: "desc",
+          },
+        },
+        select: {
+          post: {
+            select: {
+              id: true,
+              content: true,
+              userId: true,
+              createdAt: true,
+              updatedAt: true,
+              user: {
+                select: {
+                  ...selectUserColumnsWithoutPassword,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+  return user;
+};
+
+export const getUserRetweetedPosts = async (
+  userId: number
+): Promise<
+  | (UserWithoutPassword & {
+      retweets: Array<{
+        post: PostWithUser;
+      }>;
+    })
+  | null
+> => {
+  const prisma = databaseManager.getInstance();
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      ...selectUserColumnsWithoutPassword,
+      retweets: {
         orderBy: {
           post: {
             createdAt: "desc",

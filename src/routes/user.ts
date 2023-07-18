@@ -5,8 +5,8 @@ import {nanoid} from "nanoid";
 import {
   getAllUsers,
   createUser,
-  getUserWithPosts,
   getUserLikedPosts,
+  getUserRetweetedPosts,
   getUser,
   updateUserProfile,
 } from "@/models/user";
@@ -18,6 +18,7 @@ import {
 import {ensureCorrectUser} from "@/middlewares/current_user";
 import {body, validationResult} from "express-validator";
 import {HashPassword} from "@/lib/hash_password";
+import {getUserTimeline} from "@/models/timeline";
 
 export const userRouter = express.Router();
 
@@ -61,10 +62,14 @@ userRouter.post(
 /** A page to show user details */
 userRouter.get("/:userId", ensureAuthUser, async (req, res, next) => {
   const {userId} = req.params;
-  const user = await getUserWithPosts(Number(userId));
-  if (!user) return next(new Error("Invalid error: The user is undefined."));
+  const userTimeline = await getUserTimeline(Number(userId));
+  if (!userTimeline)
+    return next(new Error("Invalid error: The user is undefined."));
+
+  const {user, timeline} = userTimeline;
   res.render("users/show", {
     user,
+    timeline,
   });
 });
 
@@ -74,6 +79,16 @@ userRouter.get("/:userId/likes", ensureAuthUser, async (req, res, next) => {
   const user = await getUserLikedPosts(Number(userId));
   if (!user) return next(new Error("Invalid error: The user is undefined."));
   res.render("users/likes", {
+    user,
+  });
+});
+
+/** A page to list all tweets retweeted by a user */
+userRouter.get("/:userId/retweets", ensureAuthUser, async (req, res, next) => {
+  const {userId} = req.params;
+  const user = await getUserRetweetedPosts(Number(userId));
+  if (!user) return next(new Error("Invalid error: The user is undefined."));
+  res.render("users/retweets", {
     user,
   });
 });
