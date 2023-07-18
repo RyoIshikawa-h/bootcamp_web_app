@@ -1,4 +1,4 @@
-import {insertUsers, insertPosts, insertLikes} from "./index";
+import {insertUsers, insertPosts, insertLikes, insertRetweets} from "./index";
 
 const main = async (): Promise<void> => {
   await insertUsers([
@@ -192,6 +192,18 @@ const main = async (): Promise<void> => {
       userId: 4,
       postId: 7,
       createdAt: new Date("2021-06-23 03:00:34.725"),
+    },
+  ]);
+  await insertRetweets([
+    {
+      userId: 1,
+      postId: 2,
+      createdAt: new Date("2021-06-15 11:08:17.693"),
+    },
+    {
+      userId: 1,
+      postId: 4,
+      createdAt: new Date("2021-06-23 02:55:59.682"),
     },
   ]);
 };

@@ -1,4 +1,9 @@
-import {insertUsers, insertPosts, insertLikes} from "@/db/seed/index";
+import {
+  insertUsers,
+  insertPosts,
+  insertLikes,
+  insertRetweets,
+} from "@/db/seed/index";
 
 const main = async (): Promise<void> => {
   await insertUsers([
@@ -326,6 +331,18 @@ const main = async (): Promise<void> => {
       userId: 9,
       postId: 15,
       createdAt: new Date("2021-04-11 14:25:43.532"),
+    },
+  ]);
+  await insertRetweets([
+    {
+      userId: 1,
+      postId: 2,
+      createdAt: new Date("2021-06-15 11:08:17.693"),
+    },
+    {
+      userId: 1,
+      postId: 4,
+      createdAt: new Date("2021-06-23 02:55:59.682"),
     },
   ]);
 };

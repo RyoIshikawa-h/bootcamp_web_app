@@ -27,7 +27,7 @@
   "author": "",
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
-    "@prisma/client": "^4.12.0",
+    "@prisma/client": "^4.16.2",
     "bcrypt": "^5.0.1",
     "cookie-session": "^2.0.0",
     "dotenv-cli": "^7.2.1",
@@ -40,7 +40,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nanoid": "^3.2.0",
-    "nodemon": "^2.0.20",
+    "nodemon": "^3.0.1",
     "prisma": "^4.12.0",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.0"
